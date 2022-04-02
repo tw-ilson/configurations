@@ -1,0 +1,10 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =8
+let g:netrw_dirhist_8='/Users/tom/.config/nvim/colors'
+let g:netrw_dirhist_7='/Users/tom/.config/nvim'
+let g:netrw_dirhist_6='/Users/tom/.config'
+let g:netrw_dirhist_5='/Users/tom/Scripts/SQ-Learn/include'
+let g:netrw_dirhist_4='/Users/tom/Scripts/SQ-Learn/src'
+let g:netrw_dirhist_3='/Users/tom/Documents/Fall2021/Machine Learning/ML-MAGIC-DS4400'
+let g:netrw_dirhist_2='/Users/tom/.new_local'
+let g:netrw_dirhist_1='/Users/tom/Documents/Fall2021/Machine Learning/ds4400_project'
