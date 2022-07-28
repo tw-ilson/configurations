@@ -14,9 +14,13 @@ vim.cmd [[
 
   nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
 
+]]
+
+vim.cmd [[
   set foldmethod=indent
   set nofoldenable
   set foldnestmax=2
+  set mouse=a
 ]]
 
 function map(mode, shortcut, command)
@@ -30,22 +34,16 @@ map('v', '<space>', 'zf')
 
 map('n', 'fd', ':Telescope fd')
 
-
-
 local use = require('packer').use
 require('packer').startup(function()
-  use 'wbthomason/packer.nvim' -- Package manager
+  use 'wbthomason/packer.nvim' -- Package managers
   use 'tpope/vim-fugitive' -- Git commands in nvim
   use 'tpope/vim-rhubarb' -- Fugitive-companion to inteact with github
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
-  use 'ludovicchabant/vim-gutentags' -- Automatic tags management
   -- UI to select things (files, grep results, open buffers...)
   use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
-  use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   use 'nvim-lualine/lualine.nvim' -- Fancier statusline
   -- Add indentation guides even on blank lines
-  use 'lukas-reineke/indent-blankline.nvim'
-  -- Add git related info in the signs columns and popups
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   -- Highlight, edit, and navigate code using a fast incremental parsing library
   use 'nvim-treesitter/nvim-treesitter'
@@ -53,33 +51,61 @@ require('packer').startup(function()
   use 'psliwka/vim-smoothie'
   -- Auto Save
   use 'Pocco81/AutoSave.nvim'
-  -- Additional textobjects for treesitter
+  use {
+    "aserowy/tmux.nvim",
+  }
+  use 'rust-lang/rust.vim'
+  -- use {
+  --   'github/copilot.vim',
+  -- }
+  -- use {
+  --   "zbirenbaum/copilot.lua",
+  --   event = {"VimEnter"},
+  --   config = function ()
+  --     vim.defer_fn(function ()
+  --       require("copilot").setup()
+  --     end, 100)
+  --   end,
+  --   setup = {
+  --     cmp = {
+  --       enabled = true,
+  --       method = "getCompletionsCycling",
+  --     }
+  --   }
+  -- }
+  -- use {
+  --   "zbirenbaum/copilot-cmp",
+  --    module = "copilot_cmp",
+  -- }
+  use 'onsails/lspkind-nvim'
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
-  use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
   use 'hrsh7th/cmp-nvim-lsp'
-  use 'saadparwaiz1/cmp_luasnip'
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/cmp-path'
+  use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
-  use { 
-    "nvim-neorg/neorg",
-    config = function()
-        require('neorg').setup {
-            -- Tell Neorg what modules to load
-            load = {
-                ["core.defaults"] = {}, -- Load all the default modules
-                ["core.norg.concealer"] = {}, -- Allows for use of icons
-                ["core.norg.dirman"] = { -- Manage your directories with Neorg
-                    config = {
-                        workspaces = {
-                            notes = "~/notes"
-                        }
-                    }
-                }
-            },
-        }
-    end,
-    requires = "nvim-lua/plenary.nvim"
-  }
+  use 'saadparwaiz1/cmp_luasnip'
+  -- use {
+  --   "nvim-neorg/neorg",
+  --   config = function()
+  --       require('neorg').setup {
+  --           -- Tell Neorg what modules to load
+  --           load = {
+  --               ["core.defaults"] = {}, -- Load all the default modules
+  --               ["core.norg.concealer"] = {}, -- Allows for use of icons
+  --               ["core.norg.dirman"] = { -- Manage your directories with Neorg
+  --                   config = {
+  --                       workspaces = {
+  --                           notes = "~/notes"
+  --                       }
+  --                   }
+  --               }
+  --           },
+  --       }
+  --   end,
+  --   requires = "nvim-lua/plenary.nvim"
+  -- }
 end)
 
 --Set highlight on search
@@ -194,7 +220,7 @@ require('AutoSave').setup {
 }
 
 -- Enable telescope fzf native
-require('telescope').load_extension 'fzf'
+-- require('telescope').load_extension 'fzf'
 
 --Add leader shortcuts
 vim.api.nvim_set_keymap('n', '<leader><space>', [[<cmd>lua require('telescope.builtin').buffers()<CR>]], { noremap = true, silent = true })
@@ -286,19 +312,25 @@ local on_attach = function(_, bufnr)
   vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
 end
 
--- nvim-cmp supports additional completion capabilities
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
-
 -- Enable the following language servers
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'texlab' }
+local servers = { 'clangd', 'rust_analyzer', 'pyright', 'racket_langserver', 'tsserver', 'texlab',  }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
-    capabilities = capabilities,
+    -- capabilities = capabilities,
   }
 end
 
+local lsp_flags = {
+  -- This is the default in Nvim 0.7+
+  debounce_text_changes = 150,
+}
+require('lspconfig')['pyright'].setup{
+    on_attach = on_attach,
+    flags = lsp_flags,
+}
+
+--
 -- Example custom server
 -- Make runtime files discoverable to the server
 local runtime_path = vim.split(package.path, ';')
@@ -336,12 +368,36 @@ lspconfig.sumneko_lua.setup {
 local luasnip = require 'luasnip'
 
 -- nvim-cmp setup
-local cmp = require 'cmp'
+local cmp = require('cmp')
+local lspkind = require('lspkind')
 cmp.setup {
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
     end,
+  },
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp', group_index=1,keyword_length = 2 },
+    -- { name = "copilot", group_index=1},
+    { name = 'luasnip', group_index=1},
+    { name = 'path', group_index=1},
+    { name = 'buffer', group_index=1}
+  }),
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
+  },
+  formatting = {
+    format = function (entry, vim_item)
+      if entry.source.name == "copilot" then
+        vim_item.kind = "] Copilot"
+        vim_item.kind_hl_group = "CmpItemKindCopilot"
+        return vim_item
+      else
+        vim_item.kind = "LSP"
+      end
+      return lspkind.cmp_format({ with_text = false, maxwidth = 50 })(entry, vim_item)
+    end
   },
   mapping = {
     ['<C-p>'] = cmp.mapping.select_prev_item(),
@@ -372,11 +428,6 @@ cmp.setup {
         fallback()
       end
     end,
-  },
-  sources = {
-    { name = 'nvim_lsp', keyword_length = 4 },
-    { name = 'luasnip' },
-    { name = 'path' }
-  },
+  }
 }
 -- vim: ts=2 sts=2 sw=2 et
