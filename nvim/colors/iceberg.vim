@@ -49,7 +49,7 @@ if &background == 'light'
   hi Ignore ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
   hi Include ctermfg=25 guifg=#2d539e
   hi IncSearch cterm=reverse ctermfg=NONE gui=reverse guifg=NONE term=reverse
-  hi LineNr ctermbg=253 ctermfg=248 guibg=#dcdfe7 guifg=#9fa7bd
+  hi LineNr ctermbg=253 ctermfg=73 guibg=#dcdfe7 guifg=#9fa7bd
   hi MatchParen ctermbg=250 ctermfg=0 guibg=#bec0c9 guifg=#33374c
   hi ModeMsg ctermfg=244 guifg=#8389a3
   hi MoreMsg ctermfg=64 guifg=#668e3d
@@ -183,7 +183,7 @@ else
   hi Ignore ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
   hi Include ctermfg=110 guifg=#84a0c6
   hi IncSearch cterm=reverse ctermfg=NONE gui=reverse guifg=NONE term=reverse
-  hi LineNr ctermbg=235 ctermfg=239 guibg=#1e2132 guifg=#444b71
+  hi LineNr ctermbg=235 ctermfg=73 guibg=#1e2132 guifg=#444b71
   hi MatchParen ctermbg=237 ctermfg=255 guibg=#3e445e guifg=#ffffff
   hi ModeMsg ctermfg=242 guifg=#6b7089
   hi MoreMsg ctermfg=150 guifg=#b4be82

@@ -1,4 +1,3 @@
-
 -- Install packer
 local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 
@@ -21,6 +20,7 @@ vim.cmd [[
   set nofoldenable
   set foldnestmax=2
   set mouse=a
+  set autoread
 ]]
 
 function map(mode, shortcut, command)
@@ -50,11 +50,18 @@ require('packer').startup(function()
   -- Smooth scrolling
   use 'psliwka/vim-smoothie'
   -- Auto Save
-  use 'Pocco81/AutoSave.nvim'
+  use {
+	"Pocco81/auto-save.nvim",
+	config = function()
+       require("auto-save").setup {
+        -- your config goes here
+        -- or just leave it empty :)
+       }
+    end,
+  }
   use {
     "aserowy/tmux.nvim",
   }
-  use 'rust-lang/rust.vim'
   -- use {
   --   'github/copilot.vim',
   -- }
@@ -81,31 +88,16 @@ require('packer').startup(function()
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
   use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/cmp-path'
+  -- use 'hrsh7th/cmp-buffer'
+  -- use 'hrsh7th/cmp-path'
   use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
-  use 'L3MON4D3/LuaSnip' -- Snippets plugin
+  use({"L3MON4D3/LuaSnip", tag = "v<CurrentMajor>.*"})
   use 'saadparwaiz1/cmp_luasnip'
-  -- use {
-  --   "nvim-neorg/neorg",
-  --   config = function()
-  --       require('neorg').setup {
-  --           -- Tell Neorg what modules to load
-  --           load = {
-  --               ["core.defaults"] = {}, -- Load all the default modules
-  --               ["core.norg.concealer"] = {}, -- Allows for use of icons
-  --               ["core.norg.dirman"] = { -- Manage your directories with Neorg
-  --                   config = {
-  --                       workspaces = {
-  --                           notes = "~/notes"
-  --                       }
-  --                   }
-  --               }
-  --           },
-  --       }
-  --   end,
-  --   requires = "nvim-lua/plenary.nvim"
-  -- }
+  use 'sbdchd/neoformat'
+  use {
+    'glacambre/firenvim',
+    run = function() vim.fn['firenvim#install'](0) end 
+}
 end)
 
 --Set highlight on search
@@ -199,39 +191,29 @@ require('telescope').setup {
   },
 }
 
--- AutoSave
-require('AutoSave').setup {
-  enabled = true,
-  execution_message = function ()
-    return "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S")
-  end,
-  -- execution_message = "Saved",
-  events = {"InsertLeave", "TextChanged"},
-  conditions = {
-    exists = true,
-    filename_is_not = {},
-    filetype_is_not = {},
-    modifiable = true,
-  },
-  write_all_buffers = false,
-  on_off_commands = false,
-  clean_command_line_interval = 0,
-  debounce_delay = 135
-}
 
 -- Enable telescope fzf native
 -- require('telescope').load_extension 'fzf'
 
 --Add leader shortcuts
-vim.api.nvim_set_keymap('n', '<leader><space>', [[<cmd>lua require('telescope.builtin').buffers()<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>sf', [[<cmd>lua require('telescope.builtin').find_files({previewer = false})<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>sb', [[<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>sh', [[<cmd>lua require('telescope.builtin').help_tags()<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>st', [[<cmd>lua require('telescope.builtin').tags()<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>sd', [[<cmd>lua require('telescope.builtin').grep_string()<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>sp', [[<cmd>lua require('telescope.builtin').live_grep()<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>so', [[<cmd>lua require('telescope.builtin').tags{ only_current_buffer = true }<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>?', [[<cmd>lua require('telescope.builtin').oldfiles()<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader><space>', [[<cmd>lua require('telescope.builtin').buffers()<CR>]],
+  { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>sf', [[<cmd>lua require('telescope.builtin').find_files({previewer = false})<CR>]]
+  , { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>sb', [[<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<CR>]],
+  { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>sh', [[<cmd>lua require('telescope.builtin').help_tags()<CR>]],
+  { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>st', [[<cmd>lua require('telescope.builtin').tags()<CR>]],
+  { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>sd', [[<cmd>lua require('telescope.builtin').grep_string()<CR>]],
+  { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>sp', [[<cmd>lua require('telescope.builtin').live_grep()<CR>]],
+  { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>so',
+  [[<cmd>lua require('telescope.builtin').tags{ only_current_buffer = true }<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>?', [[<cmd>lua require('telescope.builtin').oldfiles()<CR>]],
+  { noremap = true, silent = true })
 
 -- Treesitter configuration
 -- Parsers must be installed manually via :TSInstall
@@ -292,6 +274,8 @@ vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { 
 vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true })
 
+
+
 -- LSP settings
 local lspconfig = require 'lspconfig'
 local on_attach = function(_, bufnr)
@@ -303,17 +287,19 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wl',
+    '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>so',
+    [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
   vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
 end
 
 -- Enable the following language servers
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'racket_langserver', 'tsserver', 'texlab',  }
+local servers = { 'clangd', 'rust_analyzer', 'pyright', 'racket_langserver', 'tsserver', 'texlab', }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
@@ -325,9 +311,9 @@ local lsp_flags = {
   -- This is the default in Nvim 0.7+
   debounce_text_changes = 150,
 }
-require('lspconfig')['pyright'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
+require('lspconfig')['pyright'].setup {
+  on_attach = on_attach,
+  flags = lsp_flags,
 }
 
 --
@@ -364,8 +350,15 @@ lspconfig.sumneko_lua.setup {
   },
 }
 
+vim.diagnostic.config({
+  -- virtual_text = {severity = {min=vim.diagnostic.severity.WARN}},
+  -- underline = {severity = {min=vim.diagnostic.severity.WARN}},
+  update_in_insert = true,
+  severity_sort = true,
+})
+
 -- luasnip setup
-local luasnip = require 'luasnip'
+local luasnip = require 'LuaSnip'
 
 -- nvim-cmp setup
 local cmp = require('cmp')
@@ -377,18 +370,18 @@ cmp.setup {
     end,
   },
   sources = cmp.config.sources({
-    { name = 'nvim_lsp', group_index=1,keyword_length = 2 },
+    { name = 'nvim_lsp', group_index = 1, keyword_length = 2 },
     -- { name = "copilot", group_index=1},
-    { name = 'luasnip', group_index=1},
-    { name = 'path', group_index=1},
-    { name = 'buffer', group_index=1}
+    { name = 'luasnip', group_index = 1 },
+    { name = 'path', group_index = 1 },
+    { name = 'buffer', group_index = 1 }
   }),
   window = {
     completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered(),
   },
   formatting = {
-    format = function (entry, vim_item)
+    format = function(entry, vim_item)
       if entry.source.name == "copilot" then
         vim_item.kind = "] Copilot"
         vim_item.kind_hl_group = "CmpItemKindCopilot"
