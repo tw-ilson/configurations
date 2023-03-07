@@ -1,13 +1,38 @@
-vim.cmd.packadd('packer.nvim')
-
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package managers
-  use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
+  use {
+	  'numToStr/Comment.nvim',-- "gc" to comment visual regions/lines
+	  config = function ()
+		  require('Comment').setup()
+	  end
+  }
+  -- icons
+  use 'nvim-tree/nvim-web-devicons'
   -- UI to select things (files, grep results, open buffers...)
-  use { 'nvim-telescope/telescope.nvim', tag='0.1.0', requires = { 'nvim-lua/plenary.nvim' } }
+  use {
+	'nvim-neo-tree/neo-tree.nvim',
+	branch = 'v2.x',
+	requires = {
+	      "nvim-lua/plenary.nvim",
+	      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+	      "MunifTanjim/nui.nvim"
+	}
+  }
+
+  use { 'nvim-telescope/telescope.nvim',
+	  tag='0.1.0',
+	  requires = { 'nvim-lua/plenary.nvim' },
+	  extensions = {
+		  file_browser = {
+			  theme = "ivy",
+			  hijack_netrw = true,
+		  }
+	  }
+
+  }
   use {
 	  'nvim-lualine/lualine.nvim', -- Fancier statusline
-	  requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+	  requires = {'nvim-tree/nvim-web-devicons'}
   }
   -- Add indentation guides even on blank lines
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
@@ -49,8 +74,16 @@ return require('packer').startup(function(use)
 	  }
   }
   use 'sbdchd/neoformat'
-  use {
-    'glacambre/firenvim',
-    run = function() vim.fn['firenvim#install'](0) end 
+  -- Jupyter
+  use 'goerz/jupytext'
+use {
+  'glepnir/dashboard-nvim',
+  event = 'VimEnter',
+  config = function()
+    require('dashboard').setup {
+    theme = 'hyper',
+   }
+  requires = {'nvim-tree/nvim-web-devicons'}
+  end,
 }
 end)

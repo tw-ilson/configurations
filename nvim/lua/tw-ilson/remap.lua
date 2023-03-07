@@ -8,6 +8,8 @@ map('n', '<space>', 'za')
 map('v', '<space>', 'zf')
 
 map('n', 'fd', ':Telescope fd')
+map("n", "fb", ":Neotree")
+
 
 --Remap space as leader key
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })

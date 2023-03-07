@@ -4,6 +4,8 @@ vim.o.hlsearch = false
 --Make line numbers default
 vim.wo.number = true
 vim.wo.relativenumber = true
+-- deal with swap files
+vim.cmd [[set shortmess+=A]]
 
 --Enable mouse mode
 vim.o.mouse = 'a'
@@ -29,3 +31,4 @@ vim.cmd [[hi Normal guibg=NONE ctermbg=NONE]]
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
+

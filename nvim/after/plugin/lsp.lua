@@ -3,7 +3,6 @@ local lsp = require("lsp-zero")
 lsp.preset("recommended")
 
 lsp.ensure_installed({
-	'sumneko_lua',
 	'rust_analyzer',
 	'clangd',
 	'pyright',
@@ -11,7 +10,7 @@ lsp.ensure_installed({
 })
 
 -- Fix Undefined global 'vim'
-lsp.configure('sumneko_lua', {
+lsp.configure('lua-language-server', {
     settings = {
         Lua = {
             diagnostics = {
