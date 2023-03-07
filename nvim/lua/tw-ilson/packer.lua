@@ -22,12 +22,6 @@ return require('packer').startup(function(use)
   use { 'nvim-telescope/telescope.nvim',
 	  tag='0.1.0',
 	  requires = { 'nvim-lua/plenary.nvim' },
-	  extensions = {
-		  file_browser = {
-			  theme = "ivy",
-			  hijack_netrw = true,
-		  }
-	  }
 
   }
   use {
