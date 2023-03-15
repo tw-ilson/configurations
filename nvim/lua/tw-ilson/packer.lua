@@ -22,7 +22,6 @@ return require('packer').startup(function(use)
   use { 'nvim-telescope/telescope.nvim',
 	  tag='0.1.0',
 	  requires = { 'nvim-lua/plenary.nvim' },
-
   }
   use {
 	  'nvim-lualine/lualine.nvim', -- Fancier statusline
@@ -46,6 +45,7 @@ return require('packer').startup(function(use)
   use {
     "aserowy/tmux.nvim",
   }
+  use {'romgrk/barbar.nvim', requires = 'nvim-web-devicons'}
   use {
 	  'VonHeikemen/lsp-zero.nvim',
 	  requires = {
@@ -67,17 +67,39 @@ return require('packer').startup(function(use)
 		  {'rafamadriz/friendly-snippets'},
 	  }
   }
+  use {
+    'nvim-neorg/neorg',
+    config = function()
+        require('neorg').setup {
+            load = {
+                ["core.defaults"] = {}, -- Loads default behaviour
+                ["core.norg.concealer"] = {}, -- Adds pretty icons to your documents
+                ["core.norg.dirman"] = { -- Manages Neorg workspaces
+                    config = {
+                        workspaces = {
+                            notes = "~/Sync/notes",
+                        },
+                    },
+                },
+            },
+        }
+    end,
+    run = ":Neorg sync-parsers",
+    requires = "nvim-lua/plenary.nvim",
+  }
+  --Math in Ascii
+  use 'jbyuki/nabla.nvim'
   use 'sbdchd/neoformat'
   -- Jupyter
   use 'goerz/jupytext'
-use {
-  'glepnir/dashboard-nvim',
-  event = 'VimEnter',
-  config = function()
-    require('dashboard').setup {
-    theme = 'hyper',
-   }
-  requires = {'nvim-tree/nvim-web-devicons'}
-  end,
-}
+-- use {
+--   'glepnir/dashboard-nvim',
+--   event = 'VimEnter',
+--   config = function()
+--     require('dashboard').setup {
+--     theme = 'hyper',
+--    }
+--   requires = {'nvim-tree/nvim-web-devicons'}
+--   end,
+-- }
 end)

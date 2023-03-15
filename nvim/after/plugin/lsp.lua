@@ -9,6 +9,8 @@ lsp.ensure_installed({
 	'texlab',
 })
 
+
+
 -- Fix Undefined global 'vim'
 lsp.configure('lua-language-server', {
     settings = {
