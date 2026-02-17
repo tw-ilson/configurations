@@ -1,9 +1,8 @@
+--- my remappings ---
+---
 function map(mode, shortcut, command)
   vim.api.nvim_set_keymap(mode, shortcut, command, { noremap = true, silent = true })
 end
-
---- my remappings ---
-
 
 -- folding
 map('n', '<space>', 'za')
@@ -11,27 +10,28 @@ map('v', '<space>', 'zf')
 
 -- Telescope (fuzzy find)
 map('n', 'fd', ':Telescope fd')
+map('n', 'fr', ':Telescope live_grep_args')
 
 -- Neotree (file browser)
 map('n', '<leader>\\', ':Neotree toggle position=left reveal_force_cwd<cr>')
 
 -- Nabla (math)
-map('n', 'mp', ':lua require("nabla").popup()<CR>')
+-- map('n', 'mp', ':lua require("nabla").popup()<CR>')
 
 --BarBar (buffers as tabs)
-map('n', 'C-[', ':BufferPrevious<CR>')
-map('n', 'C-]', ':BufferNext<CR>')
-map('n', 'C-x', ':BufferClose<CR>')
-map('n', 'C-4', ':BufferGoto 1<CR>')
-map('n', 'C-2', ':BufferGoto 2<CR>')
-map('n', 'C-3', ':BufferGoto 3<CR>')
-map('n', 'C-4', ':BufferGoto 4<CR>')
-map('n', 'C-5', ':BufferGoto 5<CR>')
-map('n', 'C-6', ':BufferGoto 6<CR>')
-map('n', 'C-7', ':BufferGoto 7<CR>')
-map('n', 'C-8', ':BufferGoto 8<CR>')
-map('n', 'C-9', ':BufferGoto 9<CR>')
-map('n', 'C-0', ':BufferLast<CR>')
+map('n', '<leader>[', ':BufferPrevious<CR>')
+map('n', '<leader>]', ':BufferNext<CR>')
+map('n', '<leader>x', ':BufferClose<CR>')
+map('n', '<leader>4', ':BufferGoto 1<CR>')
+map('n', '<leader>2', ':BufferGoto 2<CR>')
+map('n', '<leader>3', ':BufferGoto 3<CR>')
+map('n', '<leader>4', ':BufferGoto 4<CR>')
+map('n', '<leader>5', ':BufferGoto 5<CR>')
+map('n', '<leader>6', ':BufferGoto 6<CR>')
+map('n', '<leader>7', ':BufferGoto 7<CR>')
+map('n', '<leader>8', ':BufferGoto 8<CR>')
+map('n', '<leader>9', ':BufferGoto 9<CR>')
+map('n', '<leader>0', ':BufferLast<CR>')
 
 
 --Remap space as leader key

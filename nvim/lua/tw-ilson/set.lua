@@ -7,6 +7,12 @@ vim.wo.relativenumber = true
 
 vim.cmd [[set shortmess+=A]]
 
+-- no wrap
+vim.o.wrap = false
+
+-- no swap file
+vim.o.swapfile = false
+
 --Enable mouse mode
 vim.o.mouse = 'a'
 
@@ -14,7 +20,7 @@ vim.o.mouse = 'a'
 vim.o.breakindent = true
 
 --Save undo history
-vim.opt.undofile = true
+vim.o.undofile = true
 
 --Case insensitive searching UNLESS /C or capital in search
 vim.o.ignorecase = true
@@ -29,8 +35,6 @@ vim.cmd [[syntax on]]
 vim.cmd [[colorscheme iceberg]]
 vim.cmd [[hi Normal guibg=NONE ctermbg=NONE]]
 
--- use italics for comments
-
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
@@ -39,3 +43,29 @@ vim.o.expandtab = true
 vim.o.softtabstop = 4
 vim.o.shiftwidth = 4
 
+-- Qt Highlighting
+vim.filetype.add({
+  extension = {
+    qrc = "xml",
+    ts = "xml",
+  },
+})
+
+-- ----------------------
+-- Autocmds
+-- ----------------------
+
+-- Auto-save
+vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
+  callback = function()
+    local buf = vim.api.nvim_get_current_buf()
+    -- Skip if: not modified, no filename, not a normal buffer, or not modifiable
+    if not vim.bo[buf].modified
+      or vim.fn.expand("%") == ""
+      or vim.bo[buf].buftype ~= ""
+      or not vim.bo[buf].modifiable then
+      return
+    end
+    vim.cmd("silent write")
+  end,
+})
